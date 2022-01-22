@@ -1,3 +1,5 @@
+import random
+
 ALL_SPACES = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 X, O, BLANK = "X", "O", " "
 
@@ -53,7 +55,7 @@ def main():
                 display_board(board)
                 turn = "computer"
         else:
-            move = get_move(computer_symbol, board)
+            move = get_computer_move(computer_symbol, board)
             update_board(board, computer_symbol, move)
             if is_winner(computer_symbol, board):
                 display_board(board)
@@ -66,6 +68,48 @@ def main():
             else:
                 display_board(board)
                 turn = "player"
+
+
+def get_computer_move(computer_symbol, board):
+    if computer_symbol == "X":
+        player_symbol = "O"
+    else:
+        player_symbol = "X"
+    # try to take centre
+
+    # Check if bot can win in the next move
+    for move in board.keys():
+        board_copy = board.copy()
+        if is_valid_space(board_copy, move):
+            update_board(board_copy, computer_symbol, move)
+            if is_winner(computer_symbol, board_copy):
+                return move
+
+    for move in board.keys():
+        board_copy = board.copy()
+        if is_valid_space(board_copy, move):
+            update_board(board_copy, player_symbol, move)
+            if is_winner(player_symbol, board_copy):
+                return move
+
+    if is_valid_space(board, 5):
+        return 5
+
+    # Try to take corner, if it is free. [1, 3, 5, 7]
+    possible_moves = []
+    for move in [1, 3, 5, 7]:
+        if is_valid_space(board, move):
+            possible_moves.append(move)
+        if len(possible_moves) != 0:
+            return random.choice(possible_moves)
+
+    # Try to take the cross if possible
+    possible_moves = []
+    for move in [2, 4, 6, 8]:
+        if is_valid_space(board, move):
+            possible_moves.append(move)
+        if len(possible_moves) != 0:
+            return random.choice(possible_moves)
 
 
 def swap_turn(currentplayer, next_player):

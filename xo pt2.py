@@ -37,11 +37,14 @@ def main():
         update_board(board, current_player, move)
 
         winner = is_winner(current_player, board)
+
         if winner:
             display_board(board)
             print(f"{current_player} is winner!")
             break
+
         full_board = is_full_board_2(board)
+
         if full_board:
             display_board(board)
             print("The game is a tie!")
